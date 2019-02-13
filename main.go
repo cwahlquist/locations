@@ -6,15 +6,11 @@ import (
 	"log"
 	"net"
 	"net/http"
-
+    "path/filepath"
 	pb "locations/api/go"
-
-	h "locations/handler"
 //	m "locations/model"
 	s "locations/service"
-
 	"google.golang.org/grpc"
-
 	// needed for postman proxy
 	_ "github.com/jnewmano/grpc-json-proxy/codec"
 )
@@ -24,6 +20,15 @@ var (
 )
 
 func main() {
+
+    subFile := filepath.Join(".", "subscriptions.json")
+    log.Printf("%s",subFile);
+
+    err := s.ReadLocations(subFile)
+        if err != nil {
+            log.Fatalf("Failed to load subscriptions: %s", err)
+    }
+
 	// get env vars
 	flag.Parse()
 
@@ -38,13 +43,11 @@ func main() {
 	// initialize service layer
 	srv := s.NewService()
 
-	hnd := h.NewHandler(srv)
-
 	// create grpc server and apply middleware
 	grpcServer := grpc.NewServer()
 
 	// register missions PB with grpcServer
-	pb.RegisterLocationsServiceServer(grpcServer, hnd)
+	pb.RegisterLocationsServiceServer(grpcServer, srv)
 
 	// create http server
 	http.HandleFunc("/health", healthHandler)
