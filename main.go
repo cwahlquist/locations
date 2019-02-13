@@ -8,7 +8,6 @@ import (
 	"net/http"
     "path/filepath"
 	pb "locations/api/go"
-//	m "locations/model"
 	s "locations/service"
 	"google.golang.org/grpc"
 	// needed for postman proxy
