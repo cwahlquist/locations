@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.service.name }}
+  name: {{ .Values.service.name }}
+{{- else }}
+  name: {{ template "fullname" . }}
+{{- end }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+{{- if .Values.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+{{- if .Values.service.http.enabled }}
+  - port: {{ .Values.service.http.port }}
+    targetPort: {{ .Values.service.http.port }}
+    protocol: TCP
+    name: http
+{{- end }}
+{{- if .Values.service.grpc.enabled }}
+  - port: {{ .Values.service.grpc.port }}
+    targetPort: {{ .Values.service.grpc.port }}
+    protocol: TCP
+    name: grpc-web-port
+{{- end }}
+  selector:
+    app: {{ template "fullname" . }}

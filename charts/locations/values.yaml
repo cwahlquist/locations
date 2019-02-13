@@ -1,0 +1,76 @@
+# Default values for Go projects.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: draft
+  tag: dev
+  pullPolicy: IfNotPresent
+service:
+  name: locations
+  type: ClusterIP
+  http:
+    enabled: true
+    istioPort: 80
+    port: 8080
+    prefix: /locations
+  grpc:
+    enabled: true
+    istioPort: 31400
+    port: 8090
+    prefix: /locations-grpc
+    corsPolicy:
+      allowOrigin:
+        - "*"
+      allowMethods:
+        - POST
+        - GET
+        - OPTIONS
+        - PUT
+        - DELETE
+      allowHeaders:
+        - grpc-timeout
+        - content-type
+        - keep-alive
+        - user-agent
+        - cache-control
+        - content-type
+        - content-transfer-encoding
+        - custom-header-1
+        - x-accept-content-transfer-encoding
+        - x-accept-response-streaming
+        - x-user-agent
+        - x-grpc-web
+        - authorization
+      maxAge: 1728s
+      exposeHeaders:
+        - custom-header-1
+        - grpc-status
+        - grpc-message
+      allowCredentials: true
+  gateway:
+    enabled: true
+  annotations:
+    fabric8.io/expose: "true"
+    fabric8.io/ingress.annotations: "kubernetes.io/ingress.class: nginx"
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 80m
+    memory: 128Mi
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+  path: /health
+  port: 8080
+readinessProbe:
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+  path: /readiness
+  port: 8080
+terminationGracePeriodSeconds: 10

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package locationsService;
+
+service LocationsService {
+    rpc Health(ServiceCommand) returns(ServiceCommand) {}
+}
+
+message ServiceCommand {
+    string id = 1;
+    string name = 2;
+    bool completed = 3;
+}
+
+message Id {
+    string id = 1;
+}

@@ -1,0 +1,55 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ .Values.service.name }}-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: {{ .Values.service.http.istioPort }}
+      name: http-{{ .Values.service.name }}
+      protocol: HTTP
+    hosts:
+    - "*"
+  - port:
+      number: {{ .Values.service.grpc.istioPort }}
+      name: grpc-{{ .Values.service.name }}
+      protocol: grpc
+    tls:
+      mode: PASSTHROUGH
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Values.service.name }}-virtualservice
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - {{ .Values.service.name }}-gateway
+  http:
+{{- if .Values.service.grpc.enabled }}
+  - match:
+    - uri:
+        prefix: {{ .Values.service.grpc.prefix }}
+    route:
+    - destination:
+        host: {{ .Values.service.name }}
+        port:
+          number: {{ .Values.service.grpc.port }}
+    corsPolicy:
+{{ toYaml .Values.service.grpc.corsPolicy | indent 6 }}
+{{- end }}
+{{- if .Values.service.http.enabled }}
+  - match:
+    - uri:
+        prefix: {{ .Values.service.http.prefix }}
+    route:
+    - destination:
+        host: {{ .Values.service.name }}
+        port:
+          number: {{ .Values.service.http.port }}
+{{- end }}
