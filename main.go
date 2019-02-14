@@ -20,7 +20,7 @@ var (
 
 func main() {
 
-    subFile := filepath.Join(".", "subscriptions.json")
+    subFile := filepath.Join("/etc/config", "subscriptions.json")
     log.Printf("%s",subFile);
 
     err := s.ReadLocations(subFile)

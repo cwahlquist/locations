@@ -30,6 +30,9 @@ spec:
         - containerPort: {{ .Values.service.grpc.port }}
           name: grpc-web-port
 {{- end }}
+        volumeMounts:
+          - name: locations-volume
+            mountPath: /etc/config
         livenessProbe:
           httpGet:
             path: {{ .Values.livenessProbe.path }}
@@ -48,3 +51,8 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 12 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      volumes:
+        - name: locations-volume
+          configMap:
+            name: locations-config
+
