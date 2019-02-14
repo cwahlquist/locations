@@ -58,7 +58,7 @@ func main() {
 			log.Printf("Httpserver: ListenAndServe() error: %s", err)
 		}
 	}()
-	log.Printf("Service started on 0.0.0.0:%d", *port)
+	log.Printf("Locations service started on 0.0.0.0:%d", *port)
 
 	// start gRPC server
 	err = grpcServer.Serve(listen)
