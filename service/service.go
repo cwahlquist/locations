@@ -7,7 +7,7 @@ import (
     "github.com/davecgh/go-spew/spew"
     "io/ioutil"
     "log"
-	pb "locations/api/go"
+    pb "locations/api/go"
 )
 
 var locationList []*pb.LocationType
@@ -16,7 +16,7 @@ type Service struct {
 }
 
 func NewService() *Service {
-	return &Service{}
+    return &Service{}
 }
 
 func (s *Service) RegisterLocations(ctx context.Context, r *pb.RegisterLocationRequest) (*pb.RegisterLocationResponse, error) {
@@ -62,6 +62,10 @@ func filterLocations(r *pb.LocationsRequest, results []*pb.LocationType) []*pb.L
         }
         // region is optional
         if match && (len(r.Region) > 0) && (ll.Region != r.Region) {
+            match = false
+        }
+        // subid is optional
+        if match && (len(r.SubId) > 0) && (ll.SubId != r.SubId) {
             match = false
         }
         // type is optional

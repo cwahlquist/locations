@@ -17,7 +17,8 @@ message RegisterLocationResponse {
 message LocationsRequest {
     string Cloud = 1;
     string Region = 2;
-    int32 Type = 3;
+    string SubId = 3;
+    int32 Type = 4;
 }
 
 message LocationType {
