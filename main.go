@@ -27,11 +27,13 @@ func main() {
     log.Printf("%s",subFile);
 
     err := s.ReadLocations(subFile)
+    if err != nil {
         log.Printf("Failed to load subscriptions: %s", err)
         subFile = filepath.Join(".", "subscriptions.json")
         err = s.ReadLocations(subFile)
         if err != nil {
             log.Fatalf("Failed to load subscriptions: %s", err)
+        }
     }
 
     // get env vars
@@ -40,7 +42,7 @@ func main() {
     // start listening tcp:host:port
     listen, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
     if err != nil {
-        panic(err)
+        log.Fatalf("Failed to listen: %s", err)
     }
 
     // inject dependencies
@@ -129,7 +131,7 @@ func main() {
     // start gRPC server
     err = grpcServer.Serve(listen)
     if err != nil {
-        panic("gRpc Server failed to start")
+        log.Fatalf("gRpc Server failed to start")
     }
 }
 
