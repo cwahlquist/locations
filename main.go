@@ -21,6 +21,7 @@ var (
     port = flag.Int("port", 31400, "The server grpc port")
 )
 
+
 func main() {
 
     subFile := filepath.Join("/etc/config", "subscriptions.json")
