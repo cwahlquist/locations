@@ -118,6 +118,11 @@ func main() {
         results["status"] = "Healthy!"
         c.JSON(http.StatusOK, gin.H{"result": results})
     })
+    router.GET("/readiness", func(c *gin.Context) {
+        results := make(map[string]string)
+        results["status"] = "Ready!"
+        c.JSON(http.StatusOK, gin.H{"result": results})
+    })
     router.GET("/", func(c *gin.Context) {
         results := make(map[string]string)
         results["status"] = "Healthy!"
