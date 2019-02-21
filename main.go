@@ -25,16 +25,16 @@ var (
 
 func main() {
 
-    subFile := filepath.Join("/etc/config", "subscriptions.json")
+    subFile := filepath.Join("/etc/config", "locations.json")
     log.Printf("%s",subFile);
 
     err := s.ReadLocations(subFile)
     if err != nil {
-        log.Printf("Failed to load subscriptions: %s", err)
-        subFile = filepath.Join(".", "subscriptions.json")
+        log.Printf("Failed to load locations: %s", err)
+        subFile = filepath.Join(".", "locations.json")
         err = s.ReadLocations(subFile)
         if err != nil {
-            log.Fatalf("Failed to load subscriptions: %s", err)
+            log.Fatalf("Failed to load locations: %s", err)
         }
     }
 

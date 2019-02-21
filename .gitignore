@@ -3,5 +3,4 @@ api/js/
 api/web/
 bin/
 protoc-gen-*
-subscriptions.json
 
