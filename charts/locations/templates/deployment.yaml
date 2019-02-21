@@ -52,7 +52,7 @@ spec:
 {{ toYaml .Values.resources | indent 12 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       volumes:
-        - name: locations-volume
+        - name: {{ .Chart.Name }}-volume
           configMap:
-            name: locations-config
+            name: {{ .Chart.Name }}-config
 
