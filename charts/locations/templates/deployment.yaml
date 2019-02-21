@@ -31,7 +31,7 @@ spec:
           name: grpc-web-port
 {{- end }}
         volumeMounts:
-          - name: locations-volume
+          - name: {{ .Chart.Name }}-volume
             mountPath: /etc/config
         livenessProbe:
           httpGet:
