@@ -19,6 +19,7 @@ import (
 
 var (
     port = flag.Int("port", 31400, "The server grpc port")
+    rest = flag.Int("http", 8080, "The server http port")
 )
 
 
@@ -60,7 +61,7 @@ func main() {
     router := gin.Default()
 
     s := &http.Server{
-        Addr:           ":8080",
+        Addr:           fmt.Sprintf(":%d", *rest),
         Handler:        router,
         ReadTimeout:    10 * time.Second,
         WriteTimeout:   10 * time.Second,
