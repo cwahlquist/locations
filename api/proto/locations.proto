@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package locationsService;
+package pb;
 
 message LocationRequest {
     string Cloud = 1;
