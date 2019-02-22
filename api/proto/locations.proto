@@ -29,7 +29,8 @@ message LocationType {
     string TenantId = 5;
     string ClientId = 6;
     string Secret = 7;
-    int32 Type = 8;
+    string Endpoint = 8;
+    int32 Type = 9;
 }
 
 message LocationsResponse {
