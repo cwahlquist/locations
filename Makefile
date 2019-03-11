@@ -31,17 +31,24 @@ get-deps:
 	cd protobuf/protoc-gen-go; go install
 	rm -rf protobuf
 
-proto:
-	mkdir -p $(GO_OUT_DIR)
-	mkdir -p $(JS_OUT_DIR)
-	mkdir -p $(GRPC_WEB_OUT_DIR)
-	protoc \
-        --proto_path=${PROTO_PATH}:. \
-        --go_out=plugins=grpc:${GO_OUT_DIR} \
-        --grpc-web_out=import_style=commonjs,mode=grpcwebtext:${GRPC_WEB_OUT_DIR} \
-        --js_out="import_style=commonjs,binary:${JS_OUT_DIR}" \
-        $(PROTO_PATH)/locations.proto
-	sed -i 's/json:"-"/json:"-" bson:"-"/g' $(PROTO_PATH)/../go/*.go
+TARGETS = $(subst api/proto,api/go,$(patsubst %.proto,%.pb.go,$(wildcard api/proto/*.proto)))
+
+proto: $(TARGETS)
+
+.PHONY: force
+%.pb.go: force
+	@mkdir -p $(GO_OUT_DIR)
+	@mkdir -p $(JS_OUT_DIR)
+	@mkdir -p $(GRPC_WEB_OUT_DIR)
+	@echo $(patsubst %.pb.go,%.proto,$(subst api/go,api/proto,$(@))) "->" $@
+	@protoc \
+      --proto_path=${PROTO_PATH}:. \
+      --go_out=plugins=grpc:${GO_OUT_DIR} \
+      --grpc-web_out=import_style=commonjs,mode=grpcwebtext:${GRPC_WEB_OUT_DIR} \
+      --js_out="import_style=commonjs,binary:${JS_OUT_DIR}" \
+	  $(patsubst %.pb.go,%.proto,$(subst api/go,api/proto,$(@)))
+	@./bson.sh $@ > $@~
+	@mv $@~ $@
 
 build:
 	CGO_ENABLED=$(CGO_ENABLED) $(GO) build -ldflags $(BUILDFLAGS) -o bin/$(NAME) $(MAIN_GO)
