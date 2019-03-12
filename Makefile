@@ -16,7 +16,7 @@ JS_OUT_DIR="api/js"
 GO_OUT_DIR="api/go"
 GRPC_WEB_OUT_DIR="api/web"
 
-all: build
+all: proto build
 
 check: fmt build test
 
@@ -47,8 +47,7 @@ proto: $(TARGETS)
       --grpc-web_out=import_style=commonjs,mode=grpcwebtext:${GRPC_WEB_OUT_DIR} \
       --js_out="import_style=commonjs,binary:${JS_OUT_DIR}" \
 	  $(patsubst %.pb.go,%.proto,$(subst api/go,api/proto,$(@)))
-	@./bson.sh $@ > $@~
-	@mv $@~ $@
+	@./bson.sh $@ 
 
 build:
 	CGO_ENABLED=$(CGO_ENABLED) $(GO) build -ldflags $(BUILDFLAGS) -o bin/$(NAME) $(MAIN_GO)
