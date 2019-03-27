@@ -131,6 +131,7 @@ func main() {
     })
 
     go func() {
+        log.Printf("Locations rest service started on 0.0.0.0:%d", *rest)
         s.ListenAndServe()
     }()
     log.Printf("Locations service started on 0.0.0.0:%d", *port)
