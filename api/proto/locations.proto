@@ -3,8 +3,9 @@ syntax = "proto3";
 package pb;
 
 message LocationRequest {
-    string Cloud = 1;
-    string SubId = 3;
+    string Cloud  = 1;
+    string Region = 2;
+    string SubId  = 3;
 }
 
 message RegisterLocationRequest {
@@ -19,6 +20,12 @@ message LocationsRequest {
     string Region = 2;
     string SubId = 3;
     int32 Type = 4;
+}
+
+message LocationIdent {
+    string Cloud = 1;
+    string Region = 2;
+    string SubId = 3;
 }
 
 message LocationType {
@@ -52,6 +59,8 @@ service LocationsService {
     rpc GetLocations(LocationsRequest) returns (LocationsResponse) {}
     // Get specific location
     rpc GetLocation(LocationRequest) returns (LocationResponse) {}
+    // Get specific location
+    rpc GetLocationByIdent(LocationIdent) returns (LocationResponse) {}
     // Register specific location
     rpc RegisterLocations(RegisterLocationRequest) returns (RegisterLocationResponse) {}
 }

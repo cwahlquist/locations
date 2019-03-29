@@ -6,7 +6,6 @@ import (
     "golang.org/x/net/context"
     "github.com/davecgh/go-spew/spew"
     "io/ioutil"
-    "log"
     pb "locations/api/go"
 )
 
@@ -32,6 +31,12 @@ func (s *Service) GetLocations(ctx context.Context, r *pb.LocationsRequest) (*pb
 
 func (s *Service) GetLocation(ctx context.Context, r *pb.LocationRequest) (*pb.LocationResponse, error) {
     ll, err := findLocation(r)
+    return &pb.LocationResponse{Location: ll}, err
+}
+
+func (s *Service) GetLocationByIdent(ctx context.Context, r *pb.LocationIdent) (*pb.LocationResponse, error) {
+    rr := pb.LocationRequest{ Cloud: r.Cloud, Region: r.Region, SubId: r.SubId }
+    ll, err := findLocation(&rr)
     return &pb.LocationResponse{Location: ll}, err
 }
 
@@ -81,8 +86,7 @@ func filterLocations(r *pb.LocationsRequest, results []*pb.LocationType) []*pb.L
 
 func findLocation(r *pb.LocationRequest) (*pb.LocationType,error) {
     for _, ll := range locationList {
-        log.Printf("compare: %s:%s %s:%s", ll.SubId, r.SubId, ll.Cloud, r.Cloud)
-        if ( ll.SubId == r.SubId ) && ( ll.Cloud == r.Cloud) {
+        if ( ll.SubId == r.SubId ) && ( ll.Cloud == r.Cloud) && ( ll.Region == r.Region) {
             return ll, nil
         }
     }

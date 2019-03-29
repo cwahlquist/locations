@@ -100,12 +100,13 @@ func main() {
             c.JSON(http.StatusOK, gin.H{"result": results})
         }
     })
-    router.GET("/location/:cloud/:subid", func(c *gin.Context) {
+    router.GET("/location/:cloud/:region/:subid", func(c *gin.Context) {
         // Parse parameters
         log.Println("/location/%s/%s", c.Param("cloud"), c.Param("subid"))
         // Call locations service
         req := &pb.LocationRequest{}
         req.Cloud = c.Param("cloud")
+        req.Region = c.Param("region")
         req.SubId = c.Param("subid")
         results, err := getLocation(c, req, srv)
         if err != nil {
