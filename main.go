@@ -9,7 +9,7 @@ import (
     "net"
     "net/http"
     "path/filepath"
-    pb "locations/api/go"
+    locs "ares.locations"
     s "locations/service"
     "google.golang.org/grpc"
     "github.com/gin-gonic/gin"
@@ -56,7 +56,7 @@ func main() {
     grpcServer := grpc.NewServer()
 
     // register missions PB with grpcServer
-    pb.RegisterLocationsServiceServer(grpcServer, srv)
+    locs.RegisterLocationsServiceServer(grpcServer, srv)
 
     router := gin.Default()
 
@@ -72,7 +72,7 @@ func main() {
         // Parse parameters
         log.Println("/locations/%s/%s", c.Param("cloud"), c.Param("region"))
         // Call locations service
-        req := &pb.LocationsRequest{}
+        req := &locs.LocationsRequest{}
         req.Cloud = c.Param("cloud")
         req.Region = c.Param("region")
         req.SubId = c.Query("subid")
@@ -91,7 +91,7 @@ func main() {
         // Parse parameters
         log.Println("/locations/%s", c.Param("cloud"))
         // Call locations service
-        req := &pb.LocationsRequest{}
+        req := &locs.LocationsRequest{}
         req.Cloud = c.Param("cloud")
         results, err := getLocations(c, req, srv)
         if err != nil {
@@ -104,7 +104,7 @@ func main() {
         // Parse parameters
         log.Println("/location/%s/%s", c.Param("cloud"), c.Param("subid"))
         // Call locations service
-        req := &pb.LocationRequest{}
+        req := &locs.LocationRequest{}
         req.Cloud = c.Param("cloud")
         req.Region = c.Param("region")
         req.SubId = c.Param("subid")
@@ -144,7 +144,7 @@ func main() {
     }
 }
 
-func getLocations(c *gin.Context, req *pb.LocationsRequest, srv *s.Service) ([]map[string]interface{},error) {
+func getLocations(c *gin.Context, req *locs.LocationsRequest, srv *s.Service) ([]map[string]interface{},error) {
     res, err := srv.GetLocations(c, req)
     if err == nil {
         log.Printf("%s",res)
@@ -161,7 +161,7 @@ func getLocations(c *gin.Context, req *pb.LocationsRequest, srv *s.Service) ([]m
     return nil, nil
 }
 
-func getLocation(c *gin.Context, req *pb.LocationRequest, srv *s.Service) (map[string]interface{},error) {
+func getLocation(c *gin.Context, req *locs.LocationRequest, srv *s.Service) (map[string]interface{},error) {
     if res, err := srv.GetLocation(c, req); err == nil {
         result, err := locationToMap(res.GetLocation())
         return result, err
@@ -170,7 +170,7 @@ func getLocation(c *gin.Context, req *pb.LocationRequest, srv *s.Service) (map[s
     }
 }
 
-func locationToMap(location *pb.LocationType) (map[string]interface{},error) {
+func locationToMap(location *locs.LocationType) (map[string]interface{},error) {
     locations, err := json.Marshal(location)
     if err != nil {
         return nil, err

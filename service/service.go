@@ -6,7 +6,7 @@ import (
     "golang.org/x/net/context"
     "github.com/davecgh/go-spew/spew"
     "io/ioutil"
-    pb "locations/api/go"
+    pb "ares.locations"
 )
 
 var locationList []*pb.LocationType
