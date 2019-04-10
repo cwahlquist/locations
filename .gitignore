@@ -1,6 +1,2 @@
-api/go/
-api/js/
-api/web/
 bin/
-protoc-gen-*
 
